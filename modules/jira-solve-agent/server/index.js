@@ -91,7 +91,8 @@ module.exports = function registerRoutes(router, context) {
   async function runRefresh() {
     if (DEMO_MODE) return;
 
-    const issues = await fetchAgentData(jiraRequest);
+    const githubToken = (context.secrets && context.secrets.GITHUB_TOKEN) || '';
+    const issues = await fetchAgentData(jiraRequest, githubToken);
     writeToStorage('jira-solve-agent/data.json', {
       fetchedAt: new Date().toISOString(),
       issues

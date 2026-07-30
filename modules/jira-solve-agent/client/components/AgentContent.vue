@@ -16,40 +16,45 @@
 
     <template v-else>
       <!-- Team selector with inline stats -->
-      <div class="px-6 pt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div class="px-6 pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <button
           v-for="team in teamOptions"
           :key="team.key"
           :class="[
-            'px-4 py-4 rounded-lg border transition-colors text-left',
+            'px-3 py-3 rounded-lg border transition-colors text-left overflow-hidden',
             selectedTeam === team.key
               ? 'bg-primary-600 text-white border-primary-600 shadow-md'
               : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
           ]"
           @click="selectedTeam = team.key"
         >
-          <div class="text-sm font-semibold mb-2">{{ team.label }}</div>
-          <div class="flex items-center gap-3">
-            <div class="text-center">
-              <div :class="['text-xl font-bold', selectedTeam === team.key ? 'text-white' : 'text-gray-900 dark:text-gray-100']">{{ teamStats(team.key).total }}</div>
-              <div :class="['text-[10px] uppercase tracking-wider', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">total</div>
+          <div class="text-sm font-semibold mb-2 truncate">{{ team.label }}</div>
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="text-center min-w-0 flex-1">
+              <div :class="['text-lg font-bold leading-tight', selectedTeam === team.key ? 'text-white' : 'text-gray-900 dark:text-gray-100']">{{ teamStats(team.key).total }}</div>
+              <div :class="['text-[9px] uppercase tracking-wider leading-tight', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">total</div>
             </div>
-            <div :class="['w-px h-8', selectedTeam === team.key ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700']"></div>
-            <div class="text-center">
-              <div :class="['text-xl font-bold', selectedTeam === team.key ? 'text-white' : 'text-amber-600 dark:text-amber-400']">{{ teamStats(team.key).inProgress }}</div>
-              <div :class="['text-[10px] uppercase tracking-wider', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">wip</div>
+            <div :class="['w-px h-7 flex-shrink-0', selectedTeam === team.key ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700']"></div>
+            <div class="text-center min-w-0 flex-1">
+              <div :class="['text-lg font-bold leading-tight', selectedTeam === team.key ? 'text-white' : 'text-amber-600 dark:text-amber-400']">{{ teamStats(team.key).inProgress }}</div>
+              <div :class="['text-[9px] uppercase tracking-wider leading-tight', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">wip</div>
             </div>
-            <div :class="['w-px h-8', selectedTeam === team.key ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700']"></div>
-            <div class="text-center">
-              <div :class="['text-xl font-bold', selectedTeam === team.key ? 'text-white' : 'text-gray-500 dark:text-gray-400']">{{ teamStats(team.key).closed }}</div>
-              <div :class="['text-[10px] uppercase tracking-wider', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">closed</div>
+            <div :class="['w-px h-7 flex-shrink-0', selectedTeam === team.key ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700']"></div>
+            <div class="text-center min-w-0 flex-1">
+              <div :class="['text-lg font-bold leading-tight', selectedTeam === team.key ? 'text-white' : 'text-green-600 dark:text-green-400']">{{ teamStats(team.key).merged }}</div>
+              <div :class="['text-[9px] uppercase tracking-wider leading-tight', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">merged</div>
+            </div>
+            <div :class="['w-px h-7 flex-shrink-0', selectedTeam === team.key ? 'bg-white/20' : 'bg-gray-200 dark:bg-gray-700']"></div>
+            <div class="text-center min-w-0 flex-1">
+              <div :class="['text-lg font-bold leading-tight', selectedTeam === team.key ? 'text-white' : 'text-gray-500 dark:text-gray-400']">{{ teamStats(team.key).closed }}</div>
+              <div :class="['text-[9px] uppercase tracking-wider leading-tight', selectedTeam === team.key ? 'text-white/60' : 'text-gray-400 dark:text-gray-500']">closed</div>
             </div>
           </div>
         </button>
       </div>
 
       <!-- Stat cards -->
-      <div class="p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="p-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
           <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ displayMetrics.totalIssues }}</div>
           <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">Total Issues</div>
@@ -67,6 +72,10 @@
           <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">In Progress</div>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
+          <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ displayMetrics.mergedCount || 0 }}</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">Merged</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
           <div class="text-2xl font-bold text-gray-600 dark:text-gray-400">{{ displayMetrics.byState.closed || 0 }}</div>
           <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">Closed</div>
         </div>
@@ -74,6 +83,11 @@
           <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ displayMetrics.processedRate }}%</div>
           <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">Processed</div>
           <div class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{{ displayMetrics.processedCount }}/{{ displayMetrics.totalIssues }}</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-green-300 dark:border-green-700 p-4 text-center">
+          <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ displayMetrics.mergeRate || 0 }}%</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">Merge Rate</div>
+          <div class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{{ displayMetrics.mergedCount || 0 }}/{{ displayMetrics.byState.closed || 0 }} closed</div>
         </div>
       </div>
 
@@ -125,6 +139,7 @@
                   <th class="px-4 py-2 text-left text-gray-500 dark:text-gray-400 font-medium">Component</th>
                   <th class="px-4 py-2 text-left text-gray-500 dark:text-gray-400 font-medium">Status</th>
                   <th class="px-4 py-2 text-left text-gray-500 dark:text-gray-400 font-medium">Agent State</th>
+                  <th class="px-4 py-2 text-center text-gray-500 dark:text-gray-400 font-medium">PR</th>
                   <th class="px-4 py-2 text-center text-gray-500 dark:text-gray-400 font-medium">Processed</th>
                   <th class="px-4 py-2 text-left text-gray-500 dark:text-gray-400 font-medium">Priority</th>
                   <th class="px-4 py-2 text-left text-gray-500 dark:text-gray-400 font-medium">Assignee</th>
@@ -133,7 +148,7 @@
               </thead>
               <tbody>
                 <tr v-if="filteredIssues.length === 0">
-                  <td colspan="9" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
+                  <td colspan="10" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
                     No issues match your filters.
                   </td>
                 </tr>
@@ -165,6 +180,15 @@
                     <span :class="stateClasses(issue.agentState)">
                       {{ stateLabel(issue.agentState) }}
                     </span>
+                  </td>
+                  <td class="px-4 py-2 text-center">
+                    <a v-if="issue.prMerged && issue.prLinks && issue.prLinks.length > 0" :href="issue.prLinks[0]" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50" :title="issue.prLinks.join('\n')">
+                      Merged{{ issue.prLinks.length > 1 ? ` (${issue.prLinks.length})` : '' }}
+                    </a>
+                    <a v-else-if="issue.prLinks && issue.prLinks.length > 0" :href="issue.prLinks[0]" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600" :title="issue.prLinks.join('\n')">
+                      PR{{ issue.prLinks.length > 1 ? ` (${issue.prLinks.length})` : '' }}
+                    </a>
+                    <span v-else class="text-gray-300 dark:text-gray-600">—</span>
                   </td>
                   <td class="px-4 py-2 text-center">
                     <span v-if="issue.processed" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
@@ -245,27 +269,33 @@ const teamFilteredIssues = computed(() => {
 });
 
 function teamStats(teamKey) {
-  if (!props.agentData?.issues) return { total: 0, closed: 0, inProgress: 0 };
+  if (!props.agentData?.issues) return { total: 0, closed: 0, closedOnly: 0, merged: 0, inProgress: 0 };
   const issues = filterByTeam(props.agentData.issues, teamKey);
   let closed = 0;
+  let merged = 0;
   let inProgress = 0;
   for (const i of issues) {
     if (i.agentState === 'closed') closed++;
     if (i.agentState === 'in-progress') inProgress++;
+    if (i.prMerged) merged++;
   }
-  return { total: issues.length, closed, inProgress };
+  return { total: issues.length, closed, merged, inProgress };
 }
 
 function recomputeMetrics(issues) {
   const byState = { new: 0, 'ready-to-solve': 0, 'in-progress': 0, closed: 0, other: 0 };
   let processedCount = 0;
+  let mergedCount = 0;
   for (const issue of issues) {
     byState[issue.agentState] = (byState[issue.agentState] || 0) + 1;
     if (issue.processed) processedCount++;
+    if (issue.prMerged) mergedCount++;
   }
   const totalIssues = issues.length;
+  const closedCount = byState.closed || 0;
   const processedRate = totalIssues > 0 ? Math.round((processedCount / totalIssues) * 100) : 0;
-  return { totalIssues, byState, processedCount, processedRate };
+  const mergeRate = closedCount > 0 ? Math.round((mergedCount / closedCount) * 100) : 0;
+  return { totalIssues, byState, processedCount, processedRate, mergedCount, mergeRate };
 }
 
 const displayMetrics = computed(() => {
